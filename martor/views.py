@@ -1,7 +1,7 @@
 import json
 from django.http import HttpResponse
 from django.utils.module_loading import import_string
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -24,7 +24,8 @@ def markdown_imgur_uploader(request):
     Makdown image upload for uploading to imgur.com
     and represent as json to markdown editor.
     """
-    if request.method == 'POST' and request.is_ajax():
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if request.method == 'POST' and is_ajax:
         if 'markdown-image-upload' in request.FILES:
             image = request.FILES['markdown-image-upload']
             data = imgur_uploader(image)
